@@ -12,21 +12,22 @@ services:
     security_opt:
       - label:disable
     ports:
-      - 8112:8112 # port for deluge web UI to be reachable from local network
+      - 8080:8080 # port for deluge web UI to be reachable from local network
     command: '-f "" -r 192.168.1.0/24' # enable firewall and route local network traffic
 
-  deluge:
-    container_name: deluge
-    image: linuxserver/deluge:latest
+  qbittorrent:
+    container_name: qbittorrent
+    image: linuxserver/qbittorrent:latest
     restart: unless-stopped
     network_mode: service:vpn # run on the vpn network
     environment:
       - PUID=${PUID} # default user id, defined in .env
       - PGID=${PGID} # default group id, defined in .env
       - TZ=${TZ} # timezone, defined in .env
+      - WEBUI_PORT=8080
     volumes:
       - ${ROOT}/downloads:/downloads # downloads folder
-      - ${ROOT}/config/deluge:/config # config files
+      - ${ROOT}/config/qbittorrent:/config # config files
 
   jackett:
     container_name: jackett
